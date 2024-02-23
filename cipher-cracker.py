@@ -30,10 +30,14 @@ def get_sorted_frequencies(frequency):
     return sorted(frequency.values(), reverse=True)
 
 def compare_distributions(ctext_freq_sorted, ptext_freq_sorted):
-    # Comparing the length of the frequency lists first
-    if len(ctext_freq_sorted) != len(ptext_freq_sorted):
-        return float('inf') # Initialize with infinite
+    # Pad the shorter list with zeros to match the length of the longer list
+    length_difference = abs(len(ctext_freq_sorted) - len(ptext_freq_sorted))
+    if len(ctext_freq_sorted) > len(ptext_freq_sorted):
+        ptext_freq_sorted.extend([0] * length_difference)
+    else:
+        ctext_freq_sorted.extend([0] * length_difference)
 
+    # Calculate the score based on the difference in frequencies
     score = sum(abs(a - b) for a, b in zip(ctext_freq_sorted, ptext_freq_sorted))
     return score
 
@@ -47,7 +51,6 @@ def frequency_guess_plaintext(ctext):
     for plaintext in ptext_dict:
         ptext_freq = calculate_frequency_distribution(plaintext)
         ptext_freq_sorted = get_sorted_frequencies(ptext_freq)
-
         score = compare_distributions(ctext_freq_sorted, ptext_freq_sorted)
 
         if score < lowest_score:
