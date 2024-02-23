@@ -17,13 +17,6 @@ def calculate_frequency_distribution(text):
         if letter.isalpha():  # Consider only alphabetic characters
             frequency[letter] = frequency.get(letter, 0) + 1
 
-    '''
-    # Normalize frequencies to percentages
-    total_letters = sum(frequency.values())
-    for letter in frequency:
-        frequency[letter] = frequency[letter] / total_letters
-    '''
-
     return frequency
 
 def get_sorted_frequencies(frequency):
@@ -65,7 +58,7 @@ def random_guess_plaintext():
     return ptext_dict[random_index]
 
 def guess_plaintext(ctext):
-    # guess = random_guess_plaintext()
+    # guess = random_guess_plaintext() # Just for testing. Not used.
     guess = frequency_guess_plaintext(ctext)
     return guess
 
