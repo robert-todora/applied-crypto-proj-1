@@ -1,10 +1,8 @@
 # P1
 Project 1 for CS-GY 6903 Applied Cryptography at NYU Spring 2024
 
-## What we have so far
-### Python Part
----
-#### cipher-cracker.py
+## Python Part
+### cipher-cracker.py
 > Program which will take a ciphertext as input, and output a plaintext guess
 
 __Important considerations__
@@ -15,12 +13,12 @@ __Important considerations__
 
 __Frequency Analysis Technique__
 - The implemented logic consists of the following:
-  1. Ciphertext work
+  - __Ciphertext work__
     - The frequency of each char of the ciphertext is calculated and stored (i.e., `[5, 8, 3, 2, ...]`) for a ciphertext where a appeared 5 times, b 8, c 3, etc.
     - This array is sorted to have something like `[8, 5, 3, 2, ...]`
-  2. Plaintext work
+  - __Plaintext work__
     - Same as before, we get 5 sorted arrays with the frequencies of each of the plaintexts
-  3. Distributions comparison
+  - __Distributions comparison__
     - Now the frequencies of each plaintext is compared with the one of the ciphertext
     - A `score` value for each case is calculated
       - If the length of the sorted array is not the same (i.e., one text did not have any appearance of one char), we add a 0 to the end to be able to compare both distributions equally.
@@ -39,7 +37,7 @@ __Results__
   - __25%__: 10% of accuracy.
 - This shows how this is a good first approach, but definitely we need to improve this results when randomness is over 10%.
 ---
-#### encryption_scheme.py
+### encryption_scheme.py
 > Program which will cipher a plaintext using a shift cipher with a random generated key and a hardcoded value of `prob_of_random_ciphertext`
 
 __Important considerations__
@@ -54,7 +52,7 @@ __Logic__
   - Otherwise, we apply the shift cipher.
     - Logic here can be a bit confusing since we don't assume the key length is 1, so we can use this same approach for cipher schemes which require longer keys.
 ---
-#### benchmark.py
+### benchmark.py
 > Program to test the accuracy of our cipher cracker. It will generate a hardcoded number of `cases`, where it will cipher a random plaintext using `encryption_scheme.py`, and then try to guess the plaintext ciphered calling `cipher-cracker.py`. It will output the percentage of accuracy of the guesses.
 
 __Logic__
@@ -71,19 +69,19 @@ __Logic__
   - We compare our guesses with the original plaintexts, i.e., `[ptextguess1, ptextguess2, ...]` with `[p1, p2, ...]`
   - We add the correct guesses and calculate the percentage of accuracy
   - We output this value as the only output of our `benchmark.py`
----
-### C Part
+
+## C Part
 > We just have a very basic skeleton as a starting point.
 > Maybe we should end up submitting a final C project in case there's a big difference with Python in terms of efficiency
----
-### TODO
+
+## TODO
 1. Choose cipher we want to try to reverse
-  - __shift__ ?
----
-### IDEAS
+  * __shift__ ?
+
+## IDEAS
 1. Implement more than one for extra credit? We could do this by having a command line option to choose the cipher type we want to try to reverse
 2. Use C for efficiency
 3. Use concurrency or parallelism for efficiency
----
-### QUESTIONS
+
+## QUESTIONS
 1. Should we encrypt the space/blank `' '` character as well?
