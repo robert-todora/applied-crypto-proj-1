@@ -14,27 +14,27 @@ __Important considerations__
 __Frequency Analysis Technique__
 - The implemented logic consists of the following:
   - __Ciphertext work__
-    - The frequency of each char of the ciphertext is calculated and stored (i.e., `[5, 8, 3, 2, ...]`) for a ciphertext where a appeared 5 times, b 8, c 3, etc.
+    - The frequency of each char of the ciphertext is calculated and stored (i.e., `[5, 8, 3, 2, ...]`) for a ciphertext where the char `a` appeared 5 times, `b` 8, `c` 3, etc.
     - This array is sorted to have something like `[8, 5, 3, 2, ...]`
   - __Plaintext work__
     - Same as before, we get 5 sorted arrays with the frequencies of each of the plaintexts
   - __Distributions comparison__
     - Now the frequencies of each plaintext is compared with the one of the ciphertext
     - A `score` value for each case is calculated
-      - If the length of the sorted array is not the same (i.e., one text did not have any appearance of one char), we add a 0 to the end to be able to compare both distributions equally.
-      - The score will be based then in absolute value of the subtraction of each value of the frequency in the same position.
+      - If the length of the sorted array is not the same (i.e., one text did not have any occurrence of one char), we add a `0` to the end to be able to compare both distributions equally.
+      - The score will be based in the absolute value of the subtraction of each value of the frequency in the same position.
         - That is, for two distributions like `[3, 2, 1]` and `[3, 2, 1]` the score will be __0__.
         - And for  `[3, 2, 1]` and `[3, 2, 2]` the score will be __1__.
       - After calculating every score, the lowest score will determine the best guess.
 
 __Results__
-- This technique had the following results depending on the value of `prob_of_random_ciphertext` (the probability of one character of the ciphertext being random), using 10 cases and 5 plaintexts of length L=600:
-  - __0%__: 100% of accuracy.
-  - __5%__: 100% of accuracy.
-  - __10%__: 100% of accuracy.
-  - __15%__: 50% of accuracy.
-  - __20%__: 20% of accuracy.
-  - __25%__: 10% of accuracy.
+- This technique had the following results depending on the value of `prob_of_random_ciphertext` (the probability of one character of the ciphertext being random), using 10 cases, and 5 plaintexts of length L=600:
+  - __0%__: __100%__ of accuracy. :white_check_mark:
+  - __5%__: __100%__ of accuracy. :white_check_mark:
+  - __10%__: __100%__ of accuracy. :white_check_mark:
+  - __15%__: __50%__ of accuracy. :x:
+  - __20%__: __20%__ of accuracy. :x:
+  - __25%__: __10%__ of accuracy. :x:
 - This shows how this is a good first approach, but definitely we need to improve this results when randomness is over 10%.
 ---
 ### encryption_scheme.py
@@ -45,12 +45,12 @@ __Important considerations__
 - We are __not encrypting__ the blank `' '` character.
 
 __Logic__
-- We have the `plaintext_dict` of 5 texts, a random key in each execution (amount of characters shifted, i.e., ROT-key), and the `prob_of_random_ciphertext`.
+- We have the `plaintext_dict` of 5 texts, a random key in each execution (amount of characters shifted, i.e., ROT-key; `a` will be `b` if `key=1`, and `c` if `key=2`, etc.), and the `prob_of_random_ciphertext`.
 - We randomly select one of the plaintexts from the dict.
-- We cipher it. To do that:
+- We encrypt it. To do that:
   - If a random "coin toss" says so, we insert a random character instead of encrypting.
   - Otherwise, we apply the shift cipher.
-    - Logic here can be a bit confusing since we don't assume the key length is 1, so we can use this same approach for cipher schemes which require longer keys.
+    - Logic here in the code can be a bit confusing since we don't assume the key length is 1, so we can use this same approach for cipher schemes which require longer keys.
 ---
 ### benchmark.py
 > Program to test the accuracy of our cipher cracker. It will generate a hardcoded number of `cases`, where it will cipher a random plaintext using `encryption_scheme.py`, and then try to guess the plaintext ciphered calling `cipher-cracker.py`. It will output the percentage of accuracy of the guesses.
