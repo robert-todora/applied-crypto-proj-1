@@ -82,6 +82,9 @@ __Logic__
 1. Implement more than one for extra credit? We could do this by having a command line option to choose the cipher type we want to try to reverse
 2. Use C for efficiency
 3. Use concurrency or parallelism for efficiency
+4. What if we use the length of the ciphertexts to infer the randomness chosen and apply one or other method to be more efficient.
+5. Weighting Scheme to apply different techniques and get to a final decision.
 
 ## QUESTIONS
 1. Should we encrypt the space/blank `' '` character as well?
+2. Can we use the length of the ciphertext as information?
