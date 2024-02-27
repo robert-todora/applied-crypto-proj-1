@@ -6,7 +6,7 @@ def generate_ciphertexts(num_cases):
     plaintexts = []
     for _ in range(num_cases):
         # Call encryption_scheme.py and capture its output
-        result = subprocess.run(['python', 'encryption_scheme.py'], capture_output=True, text=True)
+        result = subprocess.run(['python3', 'encryption_scheme.py'], capture_output=True, text=True)
         # print(f"\nResult after executing the cipher: {result}")
         output = result.stdout.strip()
         # print(f"\nStriping the result: {output}")
@@ -26,7 +26,7 @@ def crack_ciphertexts(ciphertexts):
     guessed_plaintexts = []
     for ciphertext in ciphertexts:
         # Call cipher-cracker.py and pass the ciphertext
-        result = subprocess.run(['python', 'cipher-cracker.py'], input=ciphertext, capture_output=True, text=True)
+        result = subprocess.run(['python3', 'cipher-cracker.py'], input=ciphertext, capture_output=True, text=True)
         guessed_plaintext = result.stdout.strip()
         lines = guessed_plaintext.split('\n')
         plaintext_line = next(line for line in lines if line.startswith('My plaintext guess is: '))
