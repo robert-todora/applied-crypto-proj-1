@@ -7,9 +7,12 @@ Project 1 for CS-GY 6903 Applied Cryptography at NYU Spring 2024
 
 __Important considerations__
 - The chosen cipher for these first tests is the __shift__ cipher (_we can change this, or even try more than one..._)
-- There are two strategies implemented:
-  - Randomly choose a plaintext (_not being used right now, it was just to start_)
-  - Frequency analysis explained below
+- There are the following strategies implemented:
+  - Randomly choose a plaintext (_bad results_)
+  - Frequency analysis (explained below) (_partial good results_)
+  - Frequency analysis using bigrams (same as below but using bigrams (i.e., AA, AB, AC...) instead of chars) (_bad results_)
+  - [IoC][(https://en.wikipedia.org/wiki/Index_of_coincidence)] (_bad results_)
+  - [X-gram Statistics as a Fitness Measure][http://www.practicalcryptography.com/cryptanalysis/text-characterisation/quadgrams/#a-python-implementation] (_huge results_)
 
 __Frequency Analysis Technique__
 - The implemented logic consists of the following:
@@ -27,15 +30,51 @@ __Frequency Analysis Technique__
         - And for  `[3, 2, 1]` and `[3, 2, 2]` the score will be __1__.
       - After calculating every score, the lowest score will determine the best guess.
 
+__Frequency Analysis Technique__
+#### Sources
+- The following links are the main sources from where I extracted all the info to implement this technique:
+  - [Cryptanalysis of the Caesar Cipher][http://www.practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-caesar-cipher/]
+  - [Main page][http://www.practicalcryptography.com/cryptanalysis/text-characterisation/quadgrams/#a-python-implementation]
+  - [Monograms File][http://www.practicalcryptography.com/media/cryptanalysis/files/english_monograms.txt]
+  - [Bigrams File][http://www.practicalcryptography.com/media/cryptanalysis/files/english_bigrams.txt]
+  - [Score Calculation][http://www.practicalcryptography.com/media/cryptanalysis/files/ngram_score_1.py]
+  - [Breaking Caesar][http://www.practicalcryptography.com/media/cryptanalysis/files/break_caesar_4.py]
+#### Explanation
+- Very briefly, first, we downloaded the Monograms and Bigrams dictionary. These are files with the different monograms and bigrams found in the English language followed by a number depending on their probability of occurrence.
+- We implemented the `NgramScore` Python Class, where the goal is first, in the `init` function, to calculate the log probabilities of the dictionary passed as an argument (we are just using monograms or bigrams now, not both)
+- Second, implement a `score` function to use the previous information to compare with a passed text.
+- Lastly, we implement a `break_caesar` function, to use the previous code to guess the potential key used to encrypt a message with the `shift` cipher.
+- Now, once we have the potential `key`, we attempt to decrypt the `ciphertext` to obtain a `plaintext`, including its random chars.
+- Now, the last step is to decide which one of the texts in our `ptext_dict` is equivalent to the potential plaintext guessed with the obtained key. To do that, we use [Levenshtein Distance][https://en.wikipedia.org/wiki/Levenshtein_distance]
+- Levenshtein Distance is the minimum number of single-character edits (insertions, deletions, or substitutions) required to change one word (in this case, text) into the other.
+- With this, we select our plaintext guess and we output it from our cracker.
+
 __Results__
-- This technique had the following results depending on the value of `prob_of_random_ciphertext` (the probability of one character of the ciphertext being random), using 10 cases, and 5 plaintexts of length L=600:
-  - __0%__: __100%__ of accuracy. :white_check_mark:
-  - __5%__: __100%__ of accuracy. :white_check_mark:
-  - __10%__: __100%__ of accuracy. :white_check_mark:
-  - __15%__: __50%__ of accuracy. :x:
-  - __20%__: __20%__ of accuracy. :x:
-  - __25%__: __10%__ of accuracy. :x:
-- This shows how this is a good first approach, but definitely we need to improve this results when randomness is over 10%.
+- The previous explained techniques had the following results depending on the value of `prob_of_random_ciphertext` (the probability of one character of the ciphertext being random), using 10 cases, and 5 plaintexts of length L=600:
+  | Randomness   | Frequency Analysis Accuracy  | X-Grams + Levenshtein Accuracy|
+  |--------------|------------------------------|-------------------------------|
+  | 0            | __100%__ :white_check_mark:  | __100%__ :white_check_mark:   |
+  | 5            | __100%__ :white_check_mark:  | __100%__ :white_check_mark:   |
+  | 10           | __100%__ :white_check_mark:  | __100%__ :white_check_mark:   |
+  | 15           | __50%__ :x:                  | __100%__ :white_check_mark:   |
+  | 20           | __20%__ :x:                  | __100%__ :white_check_mark:   |
+  | 25           | __10%__ :x:                  | __100%__ :white_check_mark:   |
+  | 30           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 35           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 40           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 45           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 50           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 55           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 60           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 65           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 70           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 75           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 80           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 85           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 90           | N/A :x:                      | __100%__ :white_check_mark:   |
+  | 95           | N/A :x:                      | __80%__ :small_orange_diamond:|
+  | 99           | N/A :x:                      | __35%__ :x:                   |
+
 ---
 ### encryption_scheme.py
 > Program which will cipher a plaintext using a shift cipher with a random generated key and a hardcoded value of `prob_of_random_ciphertext`
@@ -77,6 +116,7 @@ __Logic__
 ## TODO
 1. Choose cipher we want to try to reverse
   * __shift__ ?
+2. Code is a mess right now, improve how it looks
 
 ## IDEAS
 1. Implement more than one for extra credit? We could do this by having a command line option to choose the cipher type we want to try to reverse
@@ -88,3 +128,4 @@ __Logic__
 ## QUESTIONS
 1. Should we encrypt the space/blank `' '` character as well?
 2. Can we use the length of the ciphertext as information?
+3. Not all the words from the texts are in the English dictionary...
