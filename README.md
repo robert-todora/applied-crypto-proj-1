@@ -30,7 +30,7 @@ __Frequency Analysis Technique__
         - And for  `[3, 2, 1]` and `[3, 2, 2]` the score will be __1__.
       - After calculating every score, the lowest score will determine the best guess.
 
-__Frequency Analysis Technique__
+__X-Grams + Levenshtein Technique__
 #### Sources
 - The following links are the main sources from where I extracted all the info to implement this technique:
   - [Cryptanalysis of the Caesar Cipher][http://www.practicalcryptography.com/cryptanalysis/stochastic-searching/cryptanalysis-caesar-cipher/]
