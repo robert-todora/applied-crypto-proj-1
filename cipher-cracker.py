@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-import random
+import random, re
+from math import log10
+from pycipher import Caesar
 
 # Plaintext dictionary with five candidate plaintexts
 ptext_dict = [
@@ -111,7 +113,7 @@ def random_guess_plaintext():
     random_index = random.randint(0, len(ptext_dict) - 1)
     return ptext_dict[random_index]
 '''
-
+'''
 def calculate_ioc(text):
     frequency = {}
     for letter in text.lower():
@@ -139,6 +141,7 @@ def ioc_guess_plaintext(ctext):
             best_match = plaintext
 
     return best_match
+'''
 
 def guess_plaintext(ctext):
     # guess = random_guess_plaintext()
@@ -147,10 +150,56 @@ def guess_plaintext(ctext):
     guess = ioc_guess_plaintext(ctext)
     return guess
 
+class NgramScore(object):
+    def __init__(self, ngramfile, sep=' '):
+        ''' Load a file containing ngrams and counts, calculate log probabilities '''
+        self.ngrams = {}
+        with open(ngramfile) as file:  # Use 'with' for proper file handling
+            for line in file:
+                key, count = line.split(sep)
+                self.ngrams[key] = int(count)
+        self.L = len(key)
+        self.N = sum(self.ngrams.values())  # Use .values() for Python 3
+        # Calculate log probabilities
+        for key in self.ngrams:
+            self.ngrams[key] = log10(float(self.ngrams[key]) / self.N)
+        self.floor = log10(0.01 / self.N)
+
+    def score(self, text):
+        ''' Compute the score of text '''
+        score = 0
+        ngrams = self.ngrams.get  # Use .get for Python 3
+        for i in range(len(text) - self.L + 1):  # Use range instead of xrange for Python 3
+            score += ngrams(text[i:i+self.L], self.floor)  # Use ngrams.get with default value
+        return score
+
+def break_caesar(ctext, fitness):
+    # make sure ciphertext has all spacing/punc removed and is uppercase
+    ctext = re.sub('[^a-z]','',ctext.lower())
+    # try all possible keys, return the one with the highest fitness
+    scores = []
+    for i in range(26):
+        scores.append((fitness.score(Caesar(i).decipher(ctext)),i))
+    return max(scores)
+
 def main():
     ctext = input("\nEnter the ciphertext:")
+    fitness = NgramScore('bigrams.txt')
+    # print(f'\nFitness score ctext {fitness.score(ctext)}')
+    value, guess_key = break_caesar(ctext, fitness)
+    print(f'\nGuessed key: {guess_key}')
+    print(f'\nGuessed text {Caesar(guess_key).decipher(ctext)}')
+
+
+    '''
+    for text in ptext_dict:
+        print(f'\nFitness score text{fitness.score(text)}')
+    '''
+
+    '''
     ptext = guess_plaintext(ctext)
     print(f"\nMy plaintext guess is: {ptext}")
+    '''
 
 if __name__ == '__main__':
     main()
