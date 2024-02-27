@@ -51,7 +51,7 @@ ptext_dict = [
 ]
 # Generate a random key for the shift cipher
 key = [random.randint(0, 26)]  # Random shift value between 0 and 26
-prob_of_random_ciphertext = 0.10  # Chance of inserting a random character
+prob_of_random_ciphertext = 0.05  # Chance of inserting a random character
 
 # Encrypt a random plaintext from the dictionary
 random_plaintext = random.choice(ptext_dict)

@@ -18,6 +18,7 @@ def calculate_frequency_distribution(text):
             frequency[letter] = frequency.get(letter, 0) + 1
     return frequency
 
+'''
 def calculate_bigram_frequency(text):
     bigram_frequency = {}
     for i in range(len(text) - 1):
@@ -25,12 +26,15 @@ def calculate_bigram_frequency(text):
         if bigram.isalpha():  # Consider only alphabetic bigrams
             bigram_frequency[bigram] = bigram_frequency.get(bigram, 0) + 1
     return bigram_frequency
+'''
 
 def get_sorted_frequencies(frequency):
     return sorted(frequency.values(), reverse=True)
 
+'''
 def get_sorted_bigram_frequencies(frequency):
     return sorted(frequency.values(), reverse=True)
+'''
 
 def compare_distributions(ctext_freq_sorted, ptext_freq_sorted):
     # Pad the shorter list with zeros to match the length of the longer list
@@ -44,6 +48,7 @@ def compare_distributions(ctext_freq_sorted, ptext_freq_sorted):
     score = sum(abs(a - b) for a, b in zip(ctext_freq_sorted, ptext_freq_sorted))
     return score
 
+'''
 def compare_bigram_distributions(ctext_bigram_freq, ptext_bigram_freq):
     # Convert bigram frequency dictionaries to sorted lists of frequencies
     ctext_freq_sorted = sorted(ctext_bigram_freq.values(), reverse=True)
@@ -56,9 +61,12 @@ def compare_bigram_distributions(ctext_bigram_freq, ptext_bigram_freq):
     else:
         ctext_freq_sorted += [0] * length_difference
 
+    # print(f'\nCtext_bigram_freq: {ctext_freq_sorted}')
+    # print(f'Ptext_bigram_freq: {ptext_freq_sorted}')
     # Calculate the score based on the difference in frequencies
     score = sum(abs(a - b) for a, b in zip(ctext_freq_sorted, ptext_freq_sorted))
     return score
+'''
 
 def frequency_guess_plaintext(ctext):
     ctext_freq = calculate_frequency_distribution(ctext)
@@ -78,31 +86,65 @@ def frequency_guess_plaintext(ctext):
 
     return best_match
 
+'''
 def bigram_guess_plaintext(ctext):
     ctext_bigram_freq = calculate_bigram_frequency(ctext)
+
 
     best_match = None
     lowest_score = float('inf')
 
     for plaintext in ptext_dict:
         ptext_bigram_freq = calculate_bigram_frequency(plaintext)
-        score = compare_bigram_distributions(ctext_bigram_freq, ptext_bigram_freq)
 
+        score = compare_bigram_distributions(ctext_bigram_freq, ptext_bigram_freq)
+        # print(f'Score: {score}')
         if score < lowest_score:
             lowest_score = score
             best_match = plaintext
 
     return best_match
-
+'''
+'''
 def random_guess_plaintext():
     # Randomly select one of the plaintexts from the dictionary
     random_index = random.randint(0, len(ptext_dict) - 1)
     return ptext_dict[random_index]
+'''
+
+def calculate_ioc(text):
+    frequency = {}
+    for letter in text.lower():
+        if letter.isalpha():
+            frequency[letter] = frequency.get(letter, 0) + 1
+
+    N = sum(frequency.values())
+    ioc = sum(f * (f - 1) for f in frequency.values()) / (N * (N - 1))
+    return ioc
+
+def ioc_guess_plaintext(ctext):
+    ctext_ioc = calculate_ioc(ctext)
+
+    best_match = None
+    closest_ioc_diff = float('inf')
+
+    for plaintext in ptext_dict:
+        ptext_ioc = calculate_ioc(plaintext)
+        print(f'\nCiphertext IoC: {ctext_ioc}')
+        print(f'Plaintext IoC: {ptext_ioc}')
+        ioc_diff = abs(ctext_ioc - ptext_ioc)
+
+        if ioc_diff < closest_ioc_diff:
+            closest_ioc_diff = ioc_diff
+            best_match = plaintext
+
+    return best_match
 
 def guess_plaintext(ctext):
     # guess = random_guess_plaintext()
     # guess = frequency_guess_plaintext(ctext)
-    guess = bigram_guess_plaintext(ctext)  # Bigram method
+    # guess = bigram_guess_plaintext(ctext)  # Bigram method
+    guess = ioc_guess_plaintext(ctext)
     return guess
 
 def main():
