@@ -182,13 +182,27 @@ def break_caesar(ctext, fitness):
         scores.append((fitness.score(Caesar(i).decipher(ctext)),i))
     return max(scores)
 
+CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
+def decrypt_shift_cipher(text, shift):
+    decrypted_text = ""
+    for character in text:
+        if character in CHARACTER_SET:
+            index = (CHARACTER_SET.index(character) - shift) % len(CHARACTER_SET)
+            decrypted_character = CHARACTER_SET[index]
+        else:
+            decrypted_character = character
+        decrypted_text += decrypted_character
+    return decrypted_text
+
+
+
 def main():
     ctext = input("\nEnter the ciphertext:")
     fitness = NgramScore('bigrams.txt')
     # print(f'\nFitness score ctext {fitness.score(ctext)}')
     value, guess_key = break_caesar(ctext, fitness)
     print(f'\nGuessed key: {guess_key}')
-    print(f'\nGuessed text {Caesar(guess_key).decipher(ctext)}')
+    print(f'\nGuessed text: {decrypt_shift_cipher(ctext, guess_key)}')
 
 
     '''
