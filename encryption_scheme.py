@@ -4,6 +4,7 @@ import random
 # Define the character set for the message and ciphertext.
 # Just lowercase chars
 CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
+CHARACTER_SET.append(chr(ord(" ")))
 
 # Classic Caesar cipher
 def shift_cipher(character, shift):
@@ -51,7 +52,7 @@ ptext_dict = [
 ]
 # Generate a random key for the shift cipher
 key = [random.randint(0, 26)]  # Random shift value between 0 and 26
-prob_of_random_ciphertext = 0.95  # Chance of inserting a random character
+prob_of_random_ciphertext = 0.7  # Chance of inserting a random character
 
 # Encrypt a random plaintext from the dictionary
 random_plaintext = random.choice(ptext_dict)

@@ -82,7 +82,6 @@ class NgramScore(object):
             self.ngrams[key] = log10(float(self.ngrams[key]) / self.N)
         self.floor = log10(0.01 / self.N)
 
-
     def score(self, text):
         ''' Compute the score of text '''
         score = 0
@@ -94,7 +93,8 @@ class NgramScore(object):
 
 def break_caesar(ctext, fitness):
     # make sure ciphertext has all spacing/punc removed and is uppercase
-    ctext = re.sub('[^a-z]','',ctext.lower())
+
+    ctext = re.sub('[^a-z\ ]','', ctext.lower())
     # try all possible keys, return the one with the highest fitness
     scores = []
     for i in range(26):
@@ -103,6 +103,7 @@ def break_caesar(ctext, fitness):
 
 
 CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
+CHARACTER_SET.append(chr(ord(" ")))
 
 
 def decrypt_shift_cipher(text, shift):
