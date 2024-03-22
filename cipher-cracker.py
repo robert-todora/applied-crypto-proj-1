@@ -13,6 +13,7 @@ ptext_dict = [
     "headmaster attractant subjugator peddlery vigil dogfights pixyish comforts aretes felinities copycat salerooms schmeering institutor hairlocks speeder composers dramatics eyeholes progressives reminiscent hermaphrodism simultaneous spondaics hayfork armory refashioning battering darning tapper pancaked unaffected televiewer mussiness pollbook sieved reclines restamp cohosh excludes homelier coacts refashioned loiterer prospectively encouragers biggest pasters modernity governorships crusted buttoned wallpapered enamors supervisal nervily groaning disembody communion embosoming tattles pancakes"
 ]
 
+
 # Calculate each char frequency for a given text
 def calculate_frequency_distribution(text):
     frequency = {}
@@ -21,8 +22,10 @@ def calculate_frequency_distribution(text):
             frequency[letter] = frequency.get(letter, 0) + 1
     return frequency
 
+
 def get_sorted_frequencies(frequency):
     return sorted(frequency.values(), reverse=True)
+
 
 def compare_distributions(ctext_freq_sorted, ptext_freq_sorted):
     # Pad the shorter list with zeros to match the length of the longer list
@@ -35,6 +38,7 @@ def compare_distributions(ctext_freq_sorted, ptext_freq_sorted):
     # Calculate the score based on the difference in frequencies
     score = sum(abs(a - b) for a, b in zip(ctext_freq_sorted, ptext_freq_sorted))
     return score
+
 
 def frequency_guess_plaintext(ctext):
     ctext_freq = calculate_frequency_distribution(ctext)
@@ -54,12 +58,14 @@ def frequency_guess_plaintext(ctext):
 
     return best_match
 
+
 def guess_plaintext(ctext):
     # guess = random_guess_plaintext() # No good results
     guess = frequency_guess_plaintext(ctext) # Partial good results
     # guess = bigram_guess_plaintext(ctext)  # # No good results
     # guess = ioc_guess_plaintext(ctext) # No good results
     return guess
+
 
 class NgramScore(object):
     def __init__(self, ngramfile, sep=' '):
@@ -76,6 +82,7 @@ class NgramScore(object):
             self.ngrams[key] = log10(float(self.ngrams[key]) / self.N)
         self.floor = log10(0.01 / self.N)
 
+
     def score(self, text):
         ''' Compute the score of text '''
         score = 0
@@ -83,6 +90,7 @@ class NgramScore(object):
         for i in range(len(text) - self.L + 1):  # Use range instead of xrange for Python 3
             score += ngrams(text[i:i+self.L], self.floor)  # Use ngrams.get with default value
         return score
+
 
 def break_caesar(ctext, fitness):
     # make sure ciphertext has all spacing/punc removed and is uppercase
@@ -93,7 +101,9 @@ def break_caesar(ctext, fitness):
         scores.append((fitness.score(Caesar(i).decipher(ctext)),i))
     return max(scores)
 
+
 CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
+
 
 def decrypt_shift_cipher(text, shift):
     decrypted_text = ""
@@ -106,6 +116,7 @@ def decrypt_shift_cipher(text, shift):
         decrypted_text += decrypted_character
     return decrypted_text
 
+
 def find_equivalent_text(guessed_text, ptext_list):
     min_distance = float('inf')
     equivalent_text_index = None
@@ -117,6 +128,7 @@ def find_equivalent_text(guessed_text, ptext_list):
             equivalent_text_index = index
 
     return equivalent_text_index
+
 
 def main():
     ctext = input("\nEnter the ciphertext:")
