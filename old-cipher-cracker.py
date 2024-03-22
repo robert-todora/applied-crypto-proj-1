@@ -13,29 +13,32 @@ ptext_dict = [
     "headmaster attractant subjugator peddlery vigil dogfights pixyish comforts aretes felinities copycat salerooms schmeering institutor hairlocks speeder composers dramatics eyeholes progressives reminiscent hermaphrodism simultaneous spondaics hayfork armory refashioning battering darning tapper pancaked unaffected televiewer mussiness pollbook sieved reclines restamp cohosh excludes homelier coacts refashioned loiterer prospectively encouragers biggest pasters modernity governorships crusted buttoned wallpapered enamors supervisal nervily groaning disembody communion embosoming tattles pancakes"
 ]
 
-# BLANK: now we have to change it here as well
-CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
-CHARACTER_SET.append(chr(ord(' '))) # THIS LINE IS THE ONE WHICH MAKES THE ACCURACY GO WAAAAY DOWN
+CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)] # All lowercase
+CHARACTER_SET.append(chr(ord(' '))) # Add the blank space to our character set
 
-# Classic Caesar cipher
+
+# Classic Shift cipher for a single char in our character set
 def shift_cipher(character, shift):
     if character not in CHARACTER_SET:
         return character
     index = (CHARACTER_SET.index(character) + shift) % len(CHARACTER_SET)
     return CHARACTER_SET[index]
 
-# Classic Caesar cipher
+
+# Classic Shift cipher decryption for a full text given a key
 def decrypt_message(ciphertext, key):
     ciphertext_pointer = 1
     L = len(ciphertext)
     plaintext = ""
 
-    while ciphertext_pointer <= L:
+    while ciphertext_pointer <= L: # TODO: this logic can be more efficient / look better
         plaintext += shift_cipher(ciphertext[ciphertext_pointer - 1], (27 - key))
         ciphertext_pointer += 1
 
     return plaintext
 
+
+# TODO: Add source of the code - README.md
 class NgramScore(object):
     def __init__(self, ngramfile, sep='-'):
         ''' Load a file containing ngrams and counts, calculate log probabilities '''
@@ -59,27 +62,23 @@ class NgramScore(object):
             score += ngrams(text[i:i+self.L], self.floor)  # Use ngrams.get with default value
         return score
 
+
 def break_caesar(ctext, fitness):
-    # make sure ciphertext has all spacing/punc removed and is uppercase 
-    # BLANK: This might be dangerous cuz we are removing spaces which now are parts of the plaintext
+    # make sure ciphertext has only chars from our charset
     ctext = re.sub('[^a-z ]','',ctext.lower())
+    
     # try all possible keys, return the one with the highest fitness
     scores = []
-    for i in range(1, 27): # BLANK: Now we have a potential extra key with the space, right?
-        
-        print(f'\nAttempt number {i}: {decrypt_message(ctext,i).upper()}')
-        print(f'\nScore of attempt number {i}: {fitness.score(decrypt_message(ctext,i).upper())}')
-        scores.append((fitness.score(decrypt_message(ctext,i).upper()), i)) # BLANK: Maybe use our own decryption function instead the library one?
-        # +1 in the line before not too sure why but it makes it work
-        print(f'\nMax scores is {max(scores)}')
-        # -- #
-        '''
-        print(f'\nAttempt number {i}: {Caesar(i).decipher(ctext)}')
-        print(f'\nScore of attempt number {i}: {fitness.score(Caesar(i).decipher(ctext))}')
-        scores.append((fitness.score(Caesar(i).decipher(ctext)),i))
-        '''
+    for i in range(1, 27):
+        # print(f'\nAttempt number {i}: {decrypt_message(ctext,i).upper()}')
+        # print(f'\nScore of attempt number {i}: {fitness.score(decrypt_message(ctext,i).upper())}')
+        scores.append((fitness.score(decrypt_message(ctext,i).upper()), i))
+        # print(f'\nMax scores is {max(scores)}')
+
     return max(scores)
 
+
+# Decrypt a text
 def decrypt_shift_cipher(text, shift):
     decrypted_text = ""
     for character in text:
@@ -91,6 +90,8 @@ def decrypt_shift_cipher(text, shift):
         decrypted_text += decrypted_character
     return decrypted_text
 
+
+# Use Levenshtein to find the closest plaintext to the obtained one
 def find_equivalent_text(guessed_text, ptext_list):
     min_distance = float('inf')
     equivalent_text_index = None
@@ -103,17 +104,17 @@ def find_equivalent_text(guessed_text, ptext_list):
 
     return equivalent_text_index
 
+
 def main():
     ctext = input("\nEnter the ciphertext:")
     fitness = NgramScore('monograms.txt')
-    # print(f'\nFitness score ctext {fitness.score(ctext)}')
     value, guess_key = break_caesar(ctext, fitness)
     # print(f'\nGuessed key: {guess_key}')
     guessed_text = decrypt_shift_cipher(ctext, guess_key)
     # print(f'\nGuessed text: {guessed_text}')
-
     equivalent_text_key = find_equivalent_text(guessed_text, ptext_dict)
     print(f"\nMy plaintext guess is: {ptext_dict[equivalent_text_key]}")
+
 
 if __name__ == '__main__':
     main()

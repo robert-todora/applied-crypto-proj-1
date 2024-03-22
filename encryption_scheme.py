@@ -2,10 +2,8 @@
 import random
 
 # Define the character set for the message and ciphertext.
-# Just lowercase chars
-CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
-CHARACTER_SET.append(chr(ord(' ')))
-#print(f'The character set length is{len(CHARACTER_SET)}')
+CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)] # Lowercase chars
+CHARACTER_SET.append(chr(ord(' '))) # Add the blank
 
 # Classic Caesar cipher
 def shift_cipher(character, shift):
@@ -14,19 +12,18 @@ def shift_cipher(character, shift):
     index = (CHARACTER_SET.index(character) + shift) % len(CHARACTER_SET)
     return CHARACTER_SET[index]
 
-# Classic Caesar cipher
+
+# Classic Caesar manual decryption
 def decrypt_message(ciphertext, key):
     ciphertext_pointer = 1
     message_pointer = 1
     L = len(ciphertext)
     plaintext = ""
-
     while ciphertext_pointer <= L:
         j = (message_pointer % len(key)) + 1
         plaintext += shift_cipher(ciphertext[ciphertext_pointer - 1], (27 - key[j - 1]))
         message_pointer += 1
         ciphertext_pointer += 1
-
     return plaintext
 
 
@@ -34,6 +31,8 @@ def coin_generation_algorithm(ciphertext_pointer, t, L):
     # Simple random coin generation algorithm for demonstration
     return random.random()
 
+
+# Encrypt a message following the pseudocode given in Brightspace
 def encrypt_message(message, key, prob_of_random_ciphertext):
     ciphertext = ""
     ciphertext_pointer = 1
@@ -58,7 +57,6 @@ def encrypt_message(message, key, prob_of_random_ciphertext):
 
     return ciphertext
 
-# Example usage
 # Plaintext dictionary with five candidate plaintexts
 ptext_dict = [
     "unconquerable tropical pythagoras rebukingly price ephedra barmiest hastes spades fevers cause wisped overdecorates linked smitten trickle scanning cognize oaken casework significate influenceable precontrived clockers defalcation fruitless splintery kids placidness regenerate harebrained liberalism neuronic clavierist attendees matinees prospectively bubbies longitudinal raving relaxants rigged oxygens chronologist briniest tweezes profaning abeyances fixity gulls coquetted budgerigar drooled unassertive shelter subsoiling surmounted frostlike jobbed hobnailed fulfilling jaywalking testabilit",
@@ -67,20 +65,17 @@ ptext_dict = [
     "rejoicing nectar asker dreadfuls kidnappers interstate incrusting quintessential neglecter brewage phosphatic angle obliquely bean walkup outflowed squib tightwads trenched pipe extents streakier frowning phantasmagories supinates imbibers inactivates tingly deserter steerages beggared pulsator laity salvageable bestrode interning stodgily cracker excisions quanted arranges poultries sleds shortly packages apparat fledge alderwomen halvah verdi ineffectualness entrenches franchising merchantability trisaccharide limekiln sportsmanship lassitudes recidivistic locating iou wardress estrus potboi",
     "headmaster attractant subjugator peddlery vigil dogfights pixyish comforts aretes felinities copycat salerooms schmeering institutor hairlocks speeder composers dramatics eyeholes progressives reminiscent hermaphrodism simultaneous spondaics hayfork armory refashioning battering darning tapper pancaked unaffected televiewer mussiness pollbook sieved reclines restamp cohosh excludes homelier coacts refashioned loiterer prospectively encouragers biggest pasters modernity governorships crusted buttoned wallpapered enamors supervisal nervily groaning disembody communion embosoming tattles pancakes"
 ]
-# Generate a random key for the shift cipher
-key = [random.randint(1, 27)]  # Random shift value between 1 and 26
-prob_of_random_ciphertext = 0.95 # Chance of inserting a random character
+
+key = [random.randint(1, 27)]  # Random key value between 1 and 27
+prob_of_random_ciphertext = 0.90 # Chance of inserting a random character
 
 # Encrypt a random plaintext from the dictionary
 random_plaintext = random.choice(ptext_dict)
-# --- DELETE LATER
-# Manually choosuing the plaintext for testing purposes
-# key = [1]
-# random_plaintext = ptext_dict[0]
-# ---
 ciphertext = encrypt_message(random_plaintext, key, prob_of_random_ciphertext)
+
 print(f"\nPlaintext: {random_plaintext}")
 print(f"\nKey: {key}")
 print(f"\nCiphertext: {ciphertext}")
-plaintext_again = decrypt_message(ciphertext, key)
-print(f"\nPlaintext: {plaintext_again}")
+# Test that our manual Caesar decryption works
+# plaintext_again = decrypt_message(ciphertext, key)
+# print(f"\nPlaintext: {plaintext_again}")

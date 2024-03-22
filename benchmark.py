@@ -1,6 +1,7 @@
 import subprocess
 import json
 
+
 def generate_ciphertexts(num_cases):
     ciphertexts = []
     plaintexts = []
@@ -22,6 +23,7 @@ def generate_ciphertexts(num_cases):
         plaintexts.append(plaintext)
     return plaintexts, ciphertexts
 
+
 def crack_ciphertexts(ciphertexts):
     guessed_plaintexts = []
     for ciphertext in ciphertexts:
@@ -30,14 +32,18 @@ def crack_ciphertexts(ciphertexts):
         guessed_plaintext = result.stdout.strip()
         lines = guessed_plaintext.split('\n')
         plaintext_line = next(line for line in lines if line.startswith('My plaintext guess is: '))
+        
         guessed_plaintext = plaintext_line.replace('My plaintext guess is: ', '').strip()
+        
         guessed_plaintexts.append(guessed_plaintext)
     return guessed_plaintexts
+
 
 def calculate_accuracy(plaintexts, guessed_plaintexts):
     correct_guesses = sum(p == g for p, g in zip(plaintexts, guessed_plaintexts))
     accuracy = (correct_guesses / len(plaintexts)) * 100
     return accuracy
+
 
 def main():
     print(f"-----------------------------------------------------------------------------")
@@ -57,6 +63,7 @@ def main():
     print(f"-----------------------------------------------------------------------------")
     print(f"Total Accuracy of the cracker after 100 cracking attempts: {tot_accuracy/10}%")
     print(f"-----------------------------------------------------------------------------")
+
 
 if __name__ == "__main__":
     main()
