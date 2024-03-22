@@ -40,14 +40,23 @@ def calculate_accuracy(plaintexts, guessed_plaintexts):
     return accuracy
 
 def main():
-    num_cases = 10  # Number of cases for the benchmark
-    plaintexts, ciphertexts = generate_ciphertexts(num_cases)
-    # print(f"\nPlaintexts are: {plaintexts}")
-    # print(f"\nCiphertexts are: {ciphertexts}")
-    guessed_plaintexts = crack_ciphertexts(ciphertexts)
-    # print(f"\nGuesses are: {guessed_plaintexts}")
-    accuracy = calculate_accuracy(plaintexts, guessed_plaintexts)
-    print(f"\nAccuracy of cipher-cracker: {accuracy}%")
+    print(f"-----------------------------------------------------------------------------")
+    print(f"Measuring the accuracy of the cracker...")
+    print(f"-----------------------------------------------------------------------------")
+    tot_accuracy = 0
+    for i in range(0,10):
+        num_cases = 10  # Number of cases for the benchmark
+        plaintexts, ciphertexts = generate_ciphertexts(num_cases)
+        # print(f"\nPlaintexts are: {plaintexts}")
+        # print(f"\nCiphertexts are: {ciphertexts}")
+        guessed_plaintexts = crack_ciphertexts(ciphertexts)
+        # print(f"\nGuesses are: {guessed_plaintexts}")
+        accuracy = calculate_accuracy(plaintexts, guessed_plaintexts)
+        tot_accuracy += accuracy
+        print(f"\tAccuracy of the cracker during iteration {i+1}: {accuracy}%")
+    print(f"-----------------------------------------------------------------------------")
+    print(f"Total Accuracy of the cracker after 100 cracking attempts: {tot_accuracy/10}%")
+    print(f"-----------------------------------------------------------------------------")
 
 if __name__ == "__main__":
     main()
