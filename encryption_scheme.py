@@ -4,6 +4,8 @@ import random
 # Define the character set for the message and ciphertext.
 # Just lowercase chars
 CHARACTER_SET = [chr(i) for i in range(ord('a'), ord('z') + 1)]
+CHARACTER_SET.append(chr(ord(' ')))
+#print(f'The character set length is{len(CHARACTER_SET)}')
 
 # Classic Caesar cipher
 def shift_cipher(character, shift):
@@ -11,6 +13,22 @@ def shift_cipher(character, shift):
         return character
     index = (CHARACTER_SET.index(character) + shift) % len(CHARACTER_SET)
     return CHARACTER_SET[index]
+
+# Classic Caesar cipher
+def decrypt_message(ciphertext, key):
+    ciphertext_pointer = 1
+    message_pointer = 1
+    L = len(ciphertext)
+    plaintext = ""
+
+    while ciphertext_pointer <= L:
+        j = (message_pointer % len(key)) + 1
+        plaintext += shift_cipher(ciphertext[ciphertext_pointer - 1], (27 - key[j - 1]))
+        message_pointer += 1
+        ciphertext_pointer += 1
+
+    return plaintext
+
 
 def coin_generation_algorithm(ciphertext_pointer, t, L):
     # Simple random coin generation algorithm for demonstration
@@ -50,8 +68,8 @@ ptext_dict = [
     "headmaster attractant subjugator peddlery vigil dogfights pixyish comforts aretes felinities copycat salerooms schmeering institutor hairlocks speeder composers dramatics eyeholes progressives reminiscent hermaphrodism simultaneous spondaics hayfork armory refashioning battering darning tapper pancaked unaffected televiewer mussiness pollbook sieved reclines restamp cohosh excludes homelier coacts refashioned loiterer prospectively encouragers biggest pasters modernity governorships crusted buttoned wallpapered enamors supervisal nervily groaning disembody communion embosoming tattles pancakes"
 ]
 # Generate a random key for the shift cipher
-key = [random.randint(0, 26)]  # Random shift value between 0 and 26
-prob_of_random_ciphertext = 0.95  # Chance of inserting a random character
+key = [random.randint(1, 27)]  # Random shift value between 1 and 26
+prob_of_random_ciphertext = 0.99  # Chance of inserting a random character
 
 # Encrypt a random plaintext from the dictionary
 random_plaintext = random.choice(ptext_dict)
@@ -64,3 +82,5 @@ ciphertext = encrypt_message(random_plaintext, key, prob_of_random_ciphertext)
 print(f"\nPlaintext: {random_plaintext}")
 print(f"\nKey: {key}")
 print(f"\nCiphertext: {ciphertext}")
+plaintext_again = decrypt_message(ciphertext, key)
+print(f"\nPlaintext: {plaintext_again}")

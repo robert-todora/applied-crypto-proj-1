@@ -26,7 +26,7 @@ def crack_ciphertexts(ciphertexts):
     guessed_plaintexts = []
     for ciphertext in ciphertexts:
         # Call cipher-cracker.py and pass the ciphertext
-        result = subprocess.run(['python3', 'cipher-cracker.py'], input=ciphertext, capture_output=True, text=True)
+        result = subprocess.run(['python3', 'old-cipher-cracker.py'], input=ciphertext, capture_output=True, text=True)
         guessed_plaintext = result.stdout.strip()
         lines = guessed_plaintext.split('\n')
         plaintext_line = next(line for line in lines if line.startswith('My plaintext guess is: '))
