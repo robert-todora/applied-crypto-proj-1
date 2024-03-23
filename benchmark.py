@@ -32,9 +32,8 @@ def crack_ciphertexts(ciphertexts):
         result = subprocess.run(['python3', 'ahuja-todora-delossantos-decrypt-source.py'], input=ciphertext, capture_output=True, text=True)
         guessed_plaintext = result.stdout.strip()
         lines = guessed_plaintext.split('\n')
-        plaintext_line = next(line for line in lines if line.startswith('My plaintext guess is: '))
-        
-        guessed_plaintext = plaintext_line.replace('My plaintext guess is: ', '').strip()
+        plaintext_line = next(line for line in lines if line.startswith('My plaintext guess is:'))
+        guessed_plaintext = plaintext_line.replace('My plaintext guess is:', '').strip()
         
         guessed_plaintexts.append(guessed_plaintext)
     return guessed_plaintexts

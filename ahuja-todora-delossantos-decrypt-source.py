@@ -98,7 +98,7 @@ def main():
     guessed_text = decrypt_shift_cipher(ctext, guess_key)
     # print(f'\nGuessed text: {guessed_text}')
     equivalent_text_key = find_equivalent_text(guessed_text, ptext_dict)
-    print(f"\nMy plaintext guess is: {ptext_dict[equivalent_text_key]}")
+    print(f"\nMy plaintext guess is:{ptext_dict[equivalent_text_key]}")
 
 
 if __name__ == '__main__':
