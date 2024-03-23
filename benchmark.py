@@ -1,5 +1,6 @@
 import subprocess
 import json
+import time
 
 
 def generate_ciphertexts(num_cases):
@@ -55,11 +56,13 @@ def main():
         plaintexts, ciphertexts = generate_ciphertexts(num_cases)
         # print(f"\nPlaintexts are: {plaintexts}")
         # print(f"\nCiphertexts are: {ciphertexts}")
+        timeA = time.time()
         guessed_plaintexts = crack_ciphertexts(ciphertexts)
+        timeB = time.time()
         # print(f"\nGuesses are: {guessed_plaintexts}")
         accuracy = calculate_accuracy(plaintexts, guessed_plaintexts)
         tot_accuracy += accuracy
-        print(f"\tAccuracy of the cracker during iteration {i+1}: {accuracy}%")
+        print(f"\tAccuracy of the cracker during iteration {i+1}: {accuracy}%. Avg Time: {round((timeB - timeA)/10, 3)} sec")
     print(f"-----------------------------------------------------------------------------")
     print(f"Total Accuracy of the cracker after 100 cracking attempts: {tot_accuracy/10}%")
     print(f"-----------------------------------------------------------------------------")
