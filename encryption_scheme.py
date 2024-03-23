@@ -67,7 +67,7 @@ ptext_dict = [
 ]
 
 key = [random.randint(1, 27)]  # Random key value between 1 and 27
-prob_of_random_ciphertext = 0.90 # Chance of inserting a random character
+prob_of_random_ciphertext = 0.25 # Chance of inserting a random character
 
 # Encrypt a random plaintext from the dictionary
 random_plaintext = random.choice(ptext_dict)
