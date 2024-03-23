@@ -83,6 +83,7 @@ def find_equivalent_text(guessed_text, ptext_list):
 
     for index, original_text in enumerate(ptext_list):
         distance = Levenshtein.distance(guessed_text, original_text)
+        print(f'\nDistance for index {index} is {distance}')
         if distance < min_distance:
             min_distance = distance
             equivalent_text_index = index
@@ -94,8 +95,10 @@ def main():
     ctext = input("\nEnter the ciphertext:")
     fitness = NgramScore('monograms.txt')
     value, guess_key = break_caesar(ctext, fitness)
-    # print(f'\nGuessed key: {guess_key}')
+    #print(f'\nGuessed value: {value}')
+    print(f'\nGuessed key: {guess_key}')
     guessed_text = decrypt_shift_cipher(ctext, guess_key)
+    #print(f'\nGuessed text: {guessed_text}')
     # print(f'\nGuessed text: {guessed_text}')
     equivalent_text_key = find_equivalent_text(guessed_text, ptext_dict)
     print(f"\nMy plaintext guess is:{ptext_dict[equivalent_text_key]}")
